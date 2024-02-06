@@ -16,6 +16,40 @@ namespace MyDataStructures
             this.addWord(word, this.root);
         }
 
+        public (string, TrieNode) predict(string word)
+        {
+            string prediction = string.Empty;
+            TrieNode node = this.root;
+            foreach (char letter in word)
+            {
+                if (node.children.ContainsKey(letter))
+                {
+                    node = node.children[letter];
+                    prediction += node.letter;
+                }
+                else
+                {
+                    return (string.Empty, new TrieNode('.'));
+                }
+            }
+            return (prediction, node);
+
+        }
+
+        public void reconstructWords(TrieNode node, string baseWord, List<string> words)
+        {
+            if (node.isWordEnd)
+            {
+                words.Add(baseWord);
+                return;
+            }
+            foreach (KeyValuePair<char, TrieNode> child in node.children)
+            {
+                string newBaseWord = baseWord + child.Value.letter;
+                this.reconstructWords(child.Value, newBaseWord, words);
+            }
+        }
+
 
         private void addWord(string word, TrieNode node)
         {
@@ -39,7 +73,6 @@ namespace MyDataStructures
                 }
             }
         }
-
     }
 
     public class TrieNode

@@ -17,6 +17,27 @@ namespace CliApp
             string fileName = args[0];
 
             TextFile textFile = new TextFile(fileName);
+            textFile.addWordsToTrie();
+
+
+            Console.WriteLine("Word :");
+            string? word = Console.ReadLine();
+
+            if (word == null)
+            {
+                Console.WriteLine("Please provide a word");
+                return 1;
+            }
+
+            string[] prediction = textFile.getPrediction(word);
+
+            if (prediction.Length > 0)
+            {
+                foreach (string w in prediction)
+                {
+                    Console.WriteLine(w);
+                }
+            }
 
             return 0;
         }
@@ -44,6 +65,23 @@ namespace CliApp
                 Console.WriteLine($"File {this.filePath} does not exist");
             }
             this.trie = new Trie();
+        }
+
+        public string[] getPrediction(string word)
+        {
+            string prediction;
+            TrieNode node;
+            if (word != null)
+            {
+                (prediction, node) = this.trie.predict(word);
+                if (prediction != string.Empty)
+                {
+                    List<string> words = new List<string>();
+                    this.trie.reconstructWords(node, prediction, words);
+                    return words.ToArray();
+                }
+            }
+            return [];
         }
 
         public void addWordsToTrie()
