@@ -41,6 +41,9 @@ namespace MyDataStructures
             if (node.isWordEnd)
             {
                 words.Add(baseWord);
+            }
+            if (node.children.Count == 0)
+            {
                 return;
             }
             foreach (KeyValuePair<char, TrieNode> child in node.children)
