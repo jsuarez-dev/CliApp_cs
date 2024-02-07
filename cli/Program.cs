@@ -1,6 +1,4 @@
 ﻿
-using System;
-using System.IO;
 using MyDataStructures;
 
 namespace CliApp
