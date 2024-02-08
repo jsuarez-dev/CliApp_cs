@@ -17,11 +17,21 @@ namespace CliApp
             TextFile textFile = new TextFile(fileName);
             textFile.addWordsToTrie();
 
+            bool flag_continue = true;
+            string word = "";
 
-            Console.WriteLine("Word :");
-            string? word = Console.ReadLine();
+            Console.WriteLine("Start");
+            do
+            {
+                if (!Console.KeyAvailable)
+                {
+                    word += Console.ReadKey(true).Key;
+                }
+                Console.WriteLine(word + "\r");
+            } while (flag_continue);
 
-            if (word == null)
+
+            if (word.Equals(""))
             {
                 Console.WriteLine("Please provide a word");
                 return 1;
