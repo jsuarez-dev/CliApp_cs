@@ -6,11 +6,34 @@ namespace CliApp
 {
     class Program
     {
+
         static int Main(string[] args)
         {
-            string fileNameDictionary = "data/dictionary_compact.json";
+            CLI app = new CLI();
+            app.Run();
 
-            EnglishDictionary myDic = new EnglishDictionary(fileNameDictionary);
+            return 0;
+        }
+    }
+
+    class CLI
+    {
+        private const uint MAX_PRESDICTION_SHOW = 20;
+        private const string FILE_NAME = "data/dictionary_compact.json";
+        public EnglishDictionary? myDic;
+
+        public CLI()
+        {
+            this.myDic = new EnglishDictionary(FILE_NAME);
+        }
+
+        public void Run()
+        {
+            if (myDic == null)
+            {
+                throw new NullReferenceException("Dictionary can not be null");
+            }
+
             bool flag_continue = true;
 
             string word = "";
@@ -41,47 +64,68 @@ namespace CliApp
                         word += keyInfo.Key.ToString().ToLower();
                     }
                     // clear the console
-                    if (prediction.Length > 0)
-                    {
-                        for (int i = 0; i < prediction.Length; i++)
-                        {
-                            Console.SetCursorPosition(0, Console.CursorTop - 1);
-                            Console.WriteLine(new string(' ', Console.WindowWidth));
-                            Console.SetCursorPosition(0, Console.CursorTop - 1);
-                        }
-                    }
+                    this.clearPredictions(prediction);
                 }
                 Console.WriteLine(word);
 
                 prediction = myDic.getPrediction(word);
+                this.printPredictions(prediction);
 
-                if (prediction.Length > 0)
-                {
-                    if (prediction.Length > 10)
-                    {
-                        for (int i = 0; i < 10; i++)
-                        {
-                            Console.WriteLine("-> " + prediction[i]);
-                        }
-                    }
-                    else
-                    {
-                        for (int i = 0; i < prediction.Length; i++)
-                        {
-                            Console.WriteLine("-> " + prediction[i]);
-                        }
-                    }
-                }
             } while (flag_continue);
 
+            this.clearPredictions(prediction);
             string definition = myDic.getDefinition(word);
-            Console.WriteLine("Definition:");
+            Console.WriteLine($"Definition of {word}:");
             Console.WriteLine(definition);
+        }
 
+        private void printPredictions(string[] prediction)
+        {
+            if (prediction.Length > 0)
+            {
+                if (prediction.Length > MAX_PRESDICTION_SHOW)
+                {
+                    for (int i = 0; i < MAX_PRESDICTION_SHOW; i++)
+                    {
+                        Console.WriteLine("-> " + prediction[i]);
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < prediction.Length; i++)
+                    {
+                        Console.WriteLine("-> " + prediction[i]);
+                    }
+                }
+            }
+        }
 
-            return 0;
+        private void clearPredictions(string[] predictions)
+        {
+            if (predictions.Length > 0)
+            {
+                if (predictions.Length > MAX_PRESDICTION_SHOW)
+                {
+                    for (int i = 0; i < MAX_PRESDICTION_SHOW + 1; i++)
+                    {
+                        Console.SetCursorPosition(0, Console.CursorTop - 1);
+                        Console.WriteLine(new string(' ', Console.WindowWidth));
+                        Console.SetCursorPosition(0, Console.CursorTop - 1);
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < predictions.Length + 1; i++)
+                    {
+                        Console.SetCursorPosition(0, Console.CursorTop - 1);
+                        Console.WriteLine(new string(' ', Console.WindowWidth));
+                        Console.SetCursorPosition(0, Console.CursorTop - 1);
+                    }
+                }
+            }
         }
     }
+
 
     class EnglishDictionary
     {
@@ -127,7 +171,15 @@ namespace CliApp
             {
                 throw new NullReferenceException(" Dictionary can not be null");
             }
-            return this.dic[word];
+            if (this.dic.ContainsKey(word))
+            {
+                return this.dic[word];
+            }
+            else
+            {
+                return $"|--- {word} not in the Dictionary ---|";
+
+            }
         }
 
         private void addWordsToTrie()
