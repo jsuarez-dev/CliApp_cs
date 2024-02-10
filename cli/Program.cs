@@ -21,6 +21,8 @@ namespace CliApp
         private const uint MAX_PRESDICTION_SHOW = 20;
         private const string FILE_NAME = "data/dictionary_compact.json";
         public EnglishDictionary? myDic;
+        private int[] wordPosition = [0, 0];
+        private int lastPosition = 0;
 
         public CLI()
         {
@@ -67,9 +69,13 @@ namespace CliApp
                     this.clearPredictions(prediction);
                 }
                 Console.WriteLine(word);
+                this.wordPosition[0] = word.Length;
+                this.wordPosition[1] = Console.CursorTop - 1;
 
                 prediction = myDic.getPrediction(word);
                 this.printPredictions(prediction);
+                this.lastPosition = Console.CursorTop;
+                Console.SetCursorPosition(this.wordPosition[0], this.wordPosition[1]);
 
             } while (flag_continue);
 
@@ -104,6 +110,7 @@ namespace CliApp
         {
             if (predictions.Length > 0)
             {
+                Console.SetCursorPosition(0, this.lastPosition);
                 if (predictions.Length > MAX_PRESDICTION_SHOW)
                 {
                     for (int i = 0; i < MAX_PRESDICTION_SHOW + 1; i++)
