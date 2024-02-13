@@ -36,11 +36,11 @@ namespace MyDataStructures
 
         }
 
-        public void reconstructWords(TrieNode node, string baseWord, List<string> words)
+        public void reconstructWords(TrieNode node, string baseWord, List<Tuple<string, uint>> words)
         {
             if (node.isWordEnd)
             {
-                words.Add(baseWord);
+                words.Add(new Tuple<string, uint>(baseWord, node.count));
             }
             if (node.children.Count == 0)
             {

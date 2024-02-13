@@ -61,6 +61,13 @@ namespace CliApp
                             word = word.Substring(0, word.Length - 1);
                         }
                     }
+                    else if (keyInfo.Key == ConsoleKey.Tab)
+                    {
+                        if (prediction.Length > 0)
+                        {
+                            word = prediction[0];
+                        }
+                    }
                     else
                     {
                         word += keyInfo.Key.ToString().ToLower();
@@ -164,9 +171,10 @@ namespace CliApp
                 (prediction, node) = this.trie.predict(word);
                 if (prediction != string.Empty)
                 {
-                    List<string> words = new List<string>();
+                    List<Tuple<string, uint>> words = new List<Tuple<string, uint>>();
                     this.trie.reconstructWords(node, prediction, words);
-                    return words.ToArray();
+                    words.Sort((x, y) => y.Item2.CompareTo(x.Item2));
+                    return words.Select(x => x.Item1).ToArray();
                 }
             }
             return [""];
