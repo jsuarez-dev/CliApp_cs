@@ -46,43 +46,59 @@ namespace CliApp
             string[] prediction = [];
             do
             {
-                if (!Console.KeyAvailable)
+                try
                 {
-                    ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+                    if (!Console.KeyAvailable)
+                    {
+                        ConsoleKeyInfo keyInfo = Console.ReadKey(true);
 
-                    if (keyInfo.Key == ConsoleKey.Enter || keyInfo.Key == ConsoleKey.Spacebar || keyInfo.Key == ConsoleKey.Escape)
-                    {
-                        flag_continue = false;
-                    }
-                    else if (keyInfo.Key == ConsoleKey.Backspace)
-                    {
-                        if (word.Length > 0)
+                        if (keyInfo.Key == ConsoleKey.Enter || keyInfo.Key == ConsoleKey.Spacebar || keyInfo.Key == ConsoleKey.Escape)
                         {
-                            word = word.Substring(0, word.Length - 1);
+                            flag_continue = false;
                         }
-                    }
-                    else if (keyInfo.Key == ConsoleKey.Tab)
-                    {
-                        if (prediction.Length > 0)
+                        else if (keyInfo.Key == ConsoleKey.Backspace)
                         {
-                            word = prediction[0];
+                            if (word.Length > 0)
+                            {
+                                word = word.Substring(0, word.Length - 1);
+                            }
                         }
+                        else if (keyInfo.Key == ConsoleKey.Tab)
+                        {
+                            if (prediction.Length > 0)
+                            {
+                                word = prediction[0];
+                            }
+                        }
+                        else
+                        {
+                            word += keyInfo.Key.ToString().ToLower();
+                        }
+                        // clear the console
+                        this.clearPredictions(prediction);
+                    }
+                    Console.WriteLine(word);
+                    this.wordPosition[0] = word.Length;
+                    this.wordPosition[1] = Console.CursorTop - 1;
+
+                    prediction = myDic.getPrediction(word);
+                    this.printPredictions(prediction);
+                    this.lastPosition = Console.CursorTop;
+                    Console.SetCursorPosition(this.wordPosition[0], this.wordPosition[1]);
+                }
+                catch (System.InvalidOperationException e)
+                {
+                    string? stdIn = Console.ReadLine();
+                    if (stdIn != null)
+                    {
+                        word = stdIn;
                     }
                     else
                     {
-                        word += keyInfo.Key.ToString().ToLower();
+                        throw new NullReferenceException("stdIn can not be null");
                     }
-                    // clear the console
-                    this.clearPredictions(prediction);
+                    flag_continue = false;
                 }
-                Console.WriteLine(word);
-                this.wordPosition[0] = word.Length;
-                this.wordPosition[1] = Console.CursorTop - 1;
-
-                prediction = myDic.getPrediction(word);
-                this.printPredictions(prediction);
-                this.lastPosition = Console.CursorTop;
-                Console.SetCursorPosition(this.wordPosition[0], this.wordPosition[1]);
 
             } while (flag_continue);
 
