@@ -1,8 +1,8 @@
 ﻿
 using System.Text.Json;
-using MyDataStructures;
+using cli.Structures;
 
-namespace CliApp
+namespace cli.App
 {
     class Program
     {

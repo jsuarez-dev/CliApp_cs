@@ -1,6 +1,5 @@
-using System;
 
-namespace MyDataStructures
+namespace cli.Structures
 {
     public class Trie
     {
@@ -94,4 +93,11 @@ namespace MyDataStructures
         }
     }
 
+    public class MyMath
+    {
+        public static int Add(int a, int b)
+        {
+            return a + b;
+        }
+    }
 }
