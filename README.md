@@ -11,5 +11,5 @@ From Project Gutenberg:
 This eBook is for the use of anyone anywhere at no cost and with almost no restrictions whatsoever. You may copy it, give it away or re-use it under the terms of the Project Gutenberg License included with this eBook or online at www.gutenberg.net
 
 
-![](media/cli_normal.mp4)
-![](media/cli_pipe.mp4)
+![](media/normal.gif)
+![](media/pipe.gif)
